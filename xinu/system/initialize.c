@@ -16,7 +16,8 @@ extern	void meminit(void);	/* Initializes the free memory list	*/
 local	process startup(void);	/* Process to finish startup tasks	*/
 
 /* Declarations of major kernel variables */
-
+int rag[NLOCK + NPROC][NLOCK + NPROC];	/* RAG for deadlock detection */
+struct 	lockentry 	locktab[NLOCK];	/* Lock table*/
 struct	procent	proctab[NPROC];	/* Process table			*/
 struct	sentry	semtab[NSEM];	/* Semaphore table			*/
 struct	memblk	memlist;	/* List of free memory blocks		*/
@@ -145,9 +146,20 @@ local process	startup(void)
  */
 static	void	sysinit()
 {
-	int32	i;
+	int32	i,j;
+	int32 	n;
 	struct	procent	*prptr;		/* Ptr to process table entry	*/
 	struct	sentry	*semptr;	/* Ptr to semaphore table entry	*/
+	struct 	lockentry *lptr;	/* ptr to lock table entry */
+
+	/* Initialize RAG to all 0s */
+	for(i = 0; i < n; i++)
+	{
+		for(j = 0; j < n; j++)
+		{
+			rag[i][j] = 0;
+		}
+	}
 
 	/* Reset the console */
 
@@ -200,6 +212,15 @@ static	void	sysinit()
 		semptr->sstate = S_FREE;
 		semptr->scount = 0;
 		semptr->squeue = newqueue();
+	}
+
+	/* Initialze Lock table */
+	for(i = 0; i < NLOCK; i++)
+	{
+		lptr = &locktab[i];
+		lptr->state = LOCK_FREE;
+		lptr->lock = FALSE;
+		lptr->wait_queue = newqueue();	
 	}
 
 	/* Initialize buffer pools */

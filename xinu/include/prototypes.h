@@ -607,6 +607,19 @@ extern	void	xdone(void);
 /* in file yield.c */
 extern	syscall	yield(void);
 
+/* in file testandset.S */
+extern uint32	test_and_set(mutex_t *);
+
+/* in file mutex.c */
+extern	void	mutex_lock(mutex_t *);
+extern	void	mutex_unlock(mutex_t *);
+
+/* in file lock.c */
+extern	syscall	lock_create();
+extern	syscall	lock_delete(lid32);
+extern	syscall	acquire(lid32);
+extern	syscall	release(lid32);
+
 /* NETWORK BYTE ORDER CONVERSION NOT NEEDED ON A BIG-ENDIAN COMPUTER */
 #define	htons(x)  ((0xff & ((x)>>8)) | ((0xff & (x)) << 8))
 #define	htonl(x)  ((((x)>>24) & 0x000000ff) | (((x)>> 8) & 0x0000ff00) | \
@@ -614,3 +627,4 @@ extern	syscall	yield(void);
 #define	ntohs(x)  ((0xff & ((x)>>8)) | ( (0xff & (x)) << 8))
 #define	ntohl(x)  ((((x)>>24) & 0x000000ff) | (((x)>> 8) & 0x0000ff00) | \
 		   (((x)<<8) & 0x00ff0000) | (((x)<<24) & 0xff000000))
+
