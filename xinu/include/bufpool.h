@@ -18,6 +18,7 @@ struct	bpentry	{		/* Description of a single buffer pool	*/
 	sid32	bpsem;		/* semaphore that counts buffers	*/
 				/*    currently available in the pool	*/
 	uint32	bpsize;		/* size of buffers in this pool		*/
+	int savedspeed;		/* Stored speed to calculate average */
 	};
 
 extern	struct	bpentry buftab[];/* Buffer pool table			*/

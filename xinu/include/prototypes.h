@@ -14,6 +14,12 @@ extern	int32	arp_alloc(void);
 extern	void	arp_ntoh(struct arppacket *);
 extern	void	arp_hton(struct arppacket *);
 
+/* In file tracker.c */
+extern void bufferinit(void);
+
+/* In file tracker.c */
+extern float updatespeed(int);
+
 /* in file ascdate.c */
 extern	status	ascdate(uint32, char *);
 
