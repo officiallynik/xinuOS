@@ -16,11 +16,14 @@ extern	void meminit(void);	/* Initializes the free memory list	*/
 local	process startup(void);	/* Process to finish startup tasks	*/
 
 /* Declarations of major kernel variables */
-int rag[NLOCK + NPROC][NLOCK + NPROC];	/* RAG for deadlock detection */
-struct 	lockentry 	locktab[NLOCK];	/* Lock table*/
+
 struct	procent	proctab[NPROC];	/* Process table			*/
 struct	sentry	semtab[NSEM];	/* Semaphore table			*/
 struct	memblk	memlist;	/* List of free memory blocks		*/
+
+/* deadlock */
+int rag[NLOCK + NPROC][NLOCK + NPROC];	/* RAG for deadlock detection */
+struct 	lockentry 	locktab[NLOCK];	/* Lock table*/
 
 /* Active system status */
 
@@ -146,10 +149,11 @@ local process	startup(void)
  */
 static	void	sysinit()
 {
-	int32	i,j;
-	int32 	n;
+	int32	i, j, n;
 	struct	procent	*prptr;		/* Ptr to process table entry	*/
 	struct	sentry	*semptr;	/* Ptr to semaphore table entry	*/
+
+	/* deadlock */
 	struct 	lockentry *lptr;	/* ptr to lock table entry */
 
 	/* Initialize RAG to all 0s */
@@ -158,8 +162,8 @@ static	void	sysinit()
 		for(j = 0; j < n; j++)
 		{
 			rag[i][j] = 0;
-		}
-	}
+		}	
+	} 
 
 	/* Reset the console */
 
@@ -175,6 +179,9 @@ static	void	sysinit()
 	meminit();
 
 	/* Initialize system variables */
+
+	/* deadlock */
+	resched_count = 0;
 
 	/* Count the Null process as the first process in the system */
 
@@ -214,13 +221,14 @@ static	void	sysinit()
 		semptr->squeue = newqueue();
 	}
 
+	/* deadlock */
 	/* Initialze Lock table */
 	for(i = 0; i < NLOCK; i++)
 	{
 		lptr = &locktab[i];
 		lptr->state = LOCK_FREE;
 		lptr->lock = FALSE;
-		lptr->wait_queue = newqueue();	
+		lptr->wait_queue = newlqueue();	
 	}
 
 	/* Initialize buffer pools */

@@ -252,7 +252,7 @@ int isCycle(int vertex_index, int *visited, int *stack)
  */
 void deadlock_recover(lid32 lockid, pid32 kid)
 {
-	struct 	lockentry *lptr;
+	struct 	lockentry *lptr;	
 	struct 	lockentry *adjacent_entry_lptr;
 	pid32	pid_index = kid - NLOCK;
 	int 	i;

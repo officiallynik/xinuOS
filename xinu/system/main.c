@@ -39,7 +39,7 @@ void	work(uint32 id)
  * @param id ID of worker
  */
 void	worker(uint32 id)
-{
+{	
 	if (id == 0)
 	{
 		acquire(mylock[0]);
@@ -60,29 +60,19 @@ void	worker(uint32 id)
 	}
 }
 
-process	main(void)
+int	main(uint32 argc, uint32 *argv)
 {
-	/* Run the Xinu shell */
-
-	recvclr();
 	int i;
 	printer_lock = lock_create();
 	for (i=0; i<N; i++)
 		mylock[i] = lock_create();
 
-	resume(create(worker, 8192, 15, "w0", 1, 0));
-	resume(create(worker, 8192, 15, "w1", 1, 1));
-	resume(create(worker, 8192, 15, "w2", 1, 2));
-	resume(create(worker, 8192, 15, "w3", 1, 3));
-	resume(create(worker, 8192, 15, "w4", 1, 4));
+	ready(create((void*) worker, INITSTK, 15, "Worker 0", 1, 0), 0);
+	ready(create((void*) worker, INITSTK, 15, "Worker 1", 1, 1), 0);
+	ready(create((void*) worker, INITSTK, 15, "Worker 2", 1, 2), 0);
+	ready(create((void*) worker, INITSTK, 15, "Worker 3", 1, 3), 0);
+	ready(create((void*) worker, INITSTK, 15, "Worker 4", 1, 4), 0);
 
-	/* Wait for shell to exit and recreate it */
-
-	// while (TRUE) {
-	//	receive();
-	//	sleepms(200);
-	//	kprintf("\n\nMain process recreating shell\n\n");
-	//	resume(create(shell, 4096, 20, "shell", 1, CONSOLE));
-	// }
-	return OK;
+	return 0;
 }
+

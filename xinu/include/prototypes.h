@@ -1,3 +1,6 @@
+/* deadlock */
+#define READY(pid, ...) ready(pid, (0, ##__VA_ARGS__))
+
 /* in file 82545EMInit.c */
 extern	status	_82545EMInit(struct ethcblk *);
 extern	status	_82545EM_read_phy_reg(struct ethcblk *, uint32, uint16 *);
@@ -607,6 +610,15 @@ extern	void	xdone(void);
 /* in file yield.c */
 extern	syscall	yield(void);
 
+/* NETWORK BYTE ORDER CONVERSION NOT NEEDED ON A BIG-ENDIAN COMPUTER */
+#define	htons(x)  ((0xff & ((x)>>8)) | ((0xff & (x)) << 8))
+#define	htonl(x)  ((((x)>>24) & 0x000000ff) | (((x)>> 8) & 0x0000ff00) | \
+		   (((x)<<8) & 0x00ff0000) | (((x)<<24) & 0xff000000))
+#define	ntohs(x)  ((0xff & ((x)>>8)) | ( (0xff & (x)) << 8))
+#define	ntohl(x)  ((((x)>>24) & 0x000000ff) | (((x)>> 8) & 0x0000ff00) | \
+		   (((x)<<8) & 0x00ff0000) | (((x)<<24) & 0xff000000))
+
+/* deadlock */
 /* in file testandset.S */
 extern uint32	test_and_set(mutex_t *);
 
@@ -620,11 +632,8 @@ extern	syscall	lock_delete(lid32);
 extern	syscall	acquire(lid32);
 extern	syscall	release(lid32);
 
-/* NETWORK BYTE ORDER CONVERSION NOT NEEDED ON A BIG-ENDIAN COMPUTER */
-#define	htons(x)  ((0xff & ((x)>>8)) | ((0xff & (x)) << 8))
-#define	htonl(x)  ((((x)>>24) & 0x000000ff) | (((x)>> 8) & 0x0000ff00) | \
-		   (((x)<<8) & 0x00ff0000) | (((x)<<24) & 0xff000000))
-#define	ntohs(x)  ((0xff & ((x)>>8)) | ( (0xff & (x)) << 8))
-#define	ntohl(x)  ((((x)>>24) & 0x000000ff) | (((x)>> 8) & 0x0000ff00) | \
-		   (((x)<<8) & 0x00ff0000) | (((x)<<24) & 0xff000000))
+/* in file lockqueue.c */
+extern	pid32	lenqueue(pid32, struct lqueue*, int32);
 
+/* in file newlockqueue.c */
+extern	struct lqueue *newlqueue(void);

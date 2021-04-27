@@ -27,7 +27,7 @@ syscall	semreset(
 	semqueue = semptr->squeue;	/* Free any waiting processes */
 	resched_cntl(DEFER_START);
 	while ((pid=getfirst(semqueue)) != EMPTY)
-		ready(pid);
+		READY(pid);
 	semptr->scount = count;		/* Reset count as specified */
 	resched_cntl(DEFER_STOP);
 	restore(mask);

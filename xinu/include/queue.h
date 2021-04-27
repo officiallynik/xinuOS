@@ -30,8 +30,6 @@ extern	struct qentry	queuetab[];
 #define	nonempty(q)	(firstid(q) <  NPROC)
 #define	firstkey(q)	(queuetab[firstid(q)].qkey)
 #define	lastkey(q)	(queuetab[ lastid(q)].qkey)
-pid32	remove(pid32 pid, qid16 q);
-struct qentry	*getbypid(pid32 pid, qid16 q);
 
 /* Inline to check queue id assumes interrupts are disabled */
 

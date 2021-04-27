@@ -31,10 +31,10 @@ syscall	send(
 	/* If recipient waiting or in timed-wait make it ready */
 
 	if (prptr->prstate == PR_RECV) {
-		ready(pid);
+		READY(pid);
 	} else if (prptr->prstate == PR_RECTIM) {
 		unsleep(pid);
-		ready(pid);
+		READY(pid);
 	}
 	restore(mask);		/* Restore interrupts */
 	return OK;

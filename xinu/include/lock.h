@@ -10,7 +10,7 @@ struct  lockentry
 {
 	byte	state;			/* whether entry is LOCK_FREE or LOCK_USED    */
 	mutex_t	lock;			/* lock */
-	qid16	wait_queue;	/* queue of waiting processes */
+	struct	lqueue	*wait_queue;	/* queue of waiting processes */
 };
 
 extern	struct	lockentry locktab[];

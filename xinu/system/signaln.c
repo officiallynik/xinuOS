@@ -28,7 +28,7 @@ syscall	signaln(
 	resched_cntl(DEFER_START);
 	for (; count > 0; count--) {
 		if ((semptr->scount++) < 0) {
-			ready(dequeue(semptr->squeue));
+			READY(dequeue(semptr->squeue));
 		}
 	}
 	resched_cntl(DEFER_STOP);

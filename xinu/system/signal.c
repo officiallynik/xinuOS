@@ -24,7 +24,7 @@ syscall	signal(
 		return SYSERR;
 	}
 	if ((semptr->scount++) < 0) {	/* Release a waiting process */
-		ready(dequeue(semptr->squeue));
+		READY(dequeue(semptr->squeue));
 	}
 	restore(mask);
 	return OK;
