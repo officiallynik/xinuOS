@@ -28,7 +28,7 @@ syscall	semdelete(
 
 	resched_cntl(DEFER_START);
 	while (semptr->scount++ < 0) {	/* Free all waiting processes	*/
-		READY(getfirst(semptr->squeue));
+		ready(getfirst(semptr->squeue), 1);
 	}
 	resched_cntl(DEFER_STOP);
 	restore(mask);

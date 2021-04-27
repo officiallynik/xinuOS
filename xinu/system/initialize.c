@@ -82,6 +82,9 @@ void	nulluser()
 
 	enable();
 
+	/* deadlock */
+	ready(create((void*) main, INITSTK, INITPRIO, "MAIN1", 2, 0, NULL), 0);
+
 	/* Initialize the network stack and start processes */
 
 	net_init();

@@ -1,6 +1,3 @@
-/* deadlock */
-#define READY(pid, ...) ready(pid, (0, ##__VA_ARGS__))
-
 /* in file 82545EMInit.c */
 extern	status	_82545EMInit(struct ethcblk *);
 extern	status	_82545EM_read_phy_reg(struct ethcblk *, uint32, uint16 *);
@@ -123,6 +120,7 @@ extern	pid32	getlast(qid16);
 extern	pid32	getitem(pid32);
 
 /* in file getmem.c */
+extern	void	*malloc(uint32);
 extern	char	*getmem(uint32);
 
 /* in file getpid.c */
@@ -437,7 +435,7 @@ extern	interrupt	sdmcdispatch(void);
 extern	syscall	read(did32, char *, uint32);
 
 /* in file ready.c */
-extern	status	ready(pid32);
+extern	status	ready(pid32, bool8);
 
 /* in file receive.c */
 extern	umsg32	receive(void);

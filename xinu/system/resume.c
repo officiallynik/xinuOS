@@ -25,7 +25,7 @@ pri16	resume(
 		return (pri16)SYSERR;
 	}
 	prio = prptr->prprio;		/* Record priority to return	*/
-	READY(pid);
+	ready(pid, 1);
 	restore(mask);
 	return prio;
 }

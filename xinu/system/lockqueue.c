@@ -212,7 +212,7 @@ pid32 ldequeue(struct lqueue *q)
 
 		// free up the space on the heap
 		q->lqsize--;
-		free(swapper, sizeof(swapper));
+		freemem(swapper, sizeof(swapper));
 	}	
 
        
@@ -228,7 +228,7 @@ pid32 ldequeue(struct lqueue *q)
  * @param q	a pointer to a queue
  * @return pointer to the entry if found, NULL otherwise
  */
-struct lqentry *getbypid(pid32 pid, struct lqueue *q)
+struct lqentry *lgetbypid(pid32 pid, struct lqueue *q)
 {
 	// return NULL if queue is empty or if an illegal pid is given
 	if(lisempty(q) == TRUE || isbadpid(pid) == TRUE) {
@@ -309,13 +309,13 @@ pid32	lremove(pid32 pid, struct lqueue *q)
 	else {
 		
 		//buffers for removal
-		struct lqentry *entry = getbypid(pid, q);
+		struct lqentry *entry = lgetbypid(pid, q);
 		struct lqentry *buffer = entry->next;
 		
 		// remove process identified by pid parameter from the queue and return its pid
 		entry->prev->next = buffer;
 		buffer->prev = entry->prev;
-		free(entry, sizeof(entry));
+		freemem(entry, sizeof(entry));
 		return pid;		
 	}
 }

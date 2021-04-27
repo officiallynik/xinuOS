@@ -97,7 +97,7 @@ syscall	lock_delete(lid32 lockid)
 	{
 		lptr = &locktab[i];
 		dequeue_pid = ldequeue(lptr->wait_queue);
-		enqueue_pid = READY(dequeue_pid, 0);
+		enqueue_pid = ready(dequeue_pid, 0);
 	}
 	
 	
@@ -193,7 +193,7 @@ syscall	release(lid32 lockid)
 
 	// START
 	// remove current process' ID from the lock's queue
-	pid32 remove_pid = remove(currpid, lptr->wait_queue);
+	pid32 remove_pid = lremove(currpid, lptr->wait_queue);
 
 	// unlock the mutex
 	mutex_unlock(&lptr->lock);

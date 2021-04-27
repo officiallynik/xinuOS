@@ -273,7 +273,7 @@ void deadlock_recover(lid32 lockid, pid32 kid)
 		if(rag[kid][i] == 1)
 		{
 			adjacent_entry_lptr = &locktab[i];
-			remove(kid, adjacent_entry_lptr->wait_queue);
+			lremove(kid, adjacent_entry_lptr->wait_queue);
 			
 			//remove the request edge
 			rag[kid][i] = 0;

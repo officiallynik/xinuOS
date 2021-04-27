@@ -41,18 +41,18 @@ struct lqentry
 
 
 /* Queue function prototypes (don't touch!) */
-void    printlqueue(struct lqueue);
-int32 	lsize(struct lqueue);
+void    printlqueue(struct lqueue*);
+int32 	lsize(struct lqueue*);
 
-bool8	lisempty(struct lqueue);
-bool8	lnonempty(struct lqueue);
-bool8	lisfull(struct lqueue);
+bool8	lisempty(struct lqueue*);
+bool8	lnonempty(struct lqueue*);
+bool8	lisfull(struct lqueue*);
 
-pid32	lgetfirst(struct lqueue);
-pid32	lgetlast(struct lqueue);
-pid32	lremove(pid32, struct lqueue);
+pid32	lgetfirst(struct lqueue*);
+pid32	lgetlast(struct lqueue*);
+pid32	lremove(pid32, struct lqueue*);
 pid32	ldequeue(struct lqueue*);
 pid32 	lenqueue(pid32, struct lqueue*, int32);
 
 struct lqueue	*newlqueue();
-struct lqentry	*getbypid(pid32, struct lqueue);
+struct lqentry	*lgetbypid(pid32, struct lqueue*);
