@@ -1,0 +1,80 @@
+#include <xinu.h>
+
+int currentSpeed;
+pid32 pids[4];
+
+
+int speedgen(int speed)
+{
+
+    int lower = speed - 5;      // lower bound to find random speed
+    int upper = speed + 5;     // upper bound to find random speed
+
+    // Edge case optimisation
+    lower = lower > 0 ? lower : 0;
+    upper = upper < MAX_SPEED ? upper : MAX_SPEED;
+
+    int range = 11;
+
+    // New speed calculation
+    int speedChange = (rand() % (range));
+//    printf("Speed Change: %d\n",speedChange);
+    int newspeed=speed;
+    if(speedChange<=5)
+	newspeed=newspeed-speedChange;
+    else{
+	newspeed=newspeed+speedChange-5;
+    }
+    newspeed = newspeed > 0 ? newspeed : 0;
+    newspeed = newspeed < MAX_SPEED ? newspeed : MAX_SPEED;
+    return newspeed;
+}
+
+
+void getspeed()
+{
+	int speed = 0;
+	while (1)
+	{
+		speed = speedgen(speed);
+		currentSpeed = speed;
+		sleep(1);
+	}
+}
+
+
+void printSpeed(){
+
+	kill(pids[0]);
+	printf("\f");
+	int i=0;
+	//printf("Current Speed: ");
+	while(1){
+		printf("Current Speed: ");
+		printf("%02d",currentSpeed);
+		printf("\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b");
+		sleep(1);
+		i++;
+		if(i==15){
+                        printf("\f");
+                        printf("To continue type c and press enter!\n");        
+                        printf("To exit type e and press enter!\n");
+                        char option;
+                        option=getchar();
+                        char newline=getchar();
+                        printf("\f");
+                        if(option=='e'){
+                                break;
+                        }
+                        i=0;
+                }
+	}
+	pids[0]=create(dashboard,2000,50,"Dashboard",0);
+	pids[3]=create(printSpeed, 2000, 30, "Print Speed", 0);
+	resume(pids[0]);
+	exit();
+
+
+
+
+}
