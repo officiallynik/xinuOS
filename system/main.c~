@@ -1,0 +1,98 @@
+
+/*  Mir Sameed Ali CS18B021   */
+/*  main.c  - main */
+
+#include <xinu.h>
+pid32 pids[3];
+
+void infinite_loop(char c){
+	//while(1){
+	kill(pids[0]);
+	printf("Process: %c\n",c);
+//}
+//	sleep(10);
+	pids[0]=create(dashboard,2000,50,"Dashboard",0);
+	
+//	printf("Process Completed\n");
+	if(c=='a'){
+	pids[1]=create(infinite_loop, 2000, 30, "proc A", 1,'a');
+}else{
+	pids[2]=create(infinite_loop, 2000, 30, "proc A", 1,'b');
+}
+	resume(pids[0]);
+	exit();
+}
+
+
+
+void getspeed() 
+{
+	int speed = 0;
+	
+    // srand(time(0));
+
+	while (1)
+	{
+		//printf("Current Speed : %d\n", speed);
+		speed = speedgen(speed);
+		lfflush(stdout);
+//		sleep(1);
+	}
+	
+}
+
+
+process	main(void)
+{
+	/* Run the Xinu shell */
+	
+	
+
+		pid32 prA = create(infinite_loop, 2000, 30, "proc A", 1,'a');
+		pid32 prB = create(getspeed, 2000, 30, "proc Speed", 0);
+		pid32 prC = create(infinite_loop, 2000, 30, "proc C", 1,'c');
+		
+		//resume(prA);
+		resume(prB);
+		//resume(prC);
+		
+
+		pids[1]=prA;
+		pids[2]=prC;
+		pid32 prDash = create(dashboard,2000,50,"Dashboard",0);
+		pids[0]=prDash;
+		printf("Pids: %d %d %d\n",pids[0],pids[1],pids[2]);
+		resume(prDash);
+		//kill(prA);
+		//kill(prB);
+		//kill(prC);
+
+
+
+
+
+
+
+
+/*
+	recvclr();
+	resume(create(infinite_loop,1024,10,"cs21procA",0));
+	resume(create(infinite_loop,1024,10,"cs21procB",0));
+	resume(create(infinite_loop,1024,10,"cs21procC",0));
+	*/
+	//	resume(create(shell, 8192, 50, "shell", 1, CONSOLE));
+	/* Wait for shell to exit and recreate it */
+/*
+	while (TRUE) {
+		receive();
+		sleepms(200);
+		kprintf("\n\nMain process recreating shell\n\n");
+		resume(create(infinite_loop,1024,10,"cs21procA",0));    
+        	resume(create(infinite_loop,1024,10,"cs21procB",0));
+        	resume(create(infinite_loop,1024,10,"cs21procC",0));
+		resume(create(shell, 4096, 20, "shell", 1, CONSOLE));
+	}
+*/
+	return OK;
+    
+}
