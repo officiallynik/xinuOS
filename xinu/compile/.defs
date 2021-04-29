@@ -35,7 +35,7 @@ SYSTEM_CFILES =                                                                 
 	semreset.c    send.c        signal.c      signaln.c     sleep.c         \
 	speed.c       stacktrace.c  suspend.c     unsleep.c     userret.c       \
 	wait.c        wakeup.c      warning.c     write.c       xdone.c         \
-	yield.c     
+	yield.c       tracker.c
 
 SRC_CFILES   += ${SYSTEM_CFILES}
 SRC_SFILES   += ${SYSTEM_SFILES}

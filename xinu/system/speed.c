@@ -1,6 +1,7 @@
 #include <xinu.h>
 
 int currentSpeed;
+int averageSpeed;
 pid32 pids[6];
 int warningType;
 int currentProcessIndex;
@@ -35,8 +36,10 @@ int speedgen(int speed)
 void getspeed(sid32 semWarning)
 {
 	int speed = 60;
+	currentSpeed = 60;
 	while (1)
 	{
+		averageSpeed = updatespeedbuffer(currentSpeed);
 		speed = speedgen(speed);
 		currentSpeed = speed;
 		sleep(1);
@@ -45,9 +48,9 @@ void getspeed(sid32 semWarning)
 			kill(pids[0]);
 			//printf("Killed\n");
 			wait(semWarning);
-            			warningType = 1;
-				//printf("Warning!!\n");
-        		signal(semWarning);
+			warningType = 1;
+			//printf("Warning!!\n");
+			signal(semWarning);
 			//printf("warning setup 1\n");
 			speed=0;
 			currentSpeed=0;
@@ -67,24 +70,24 @@ void printSpeed(){
 	int i=0;
 	//printf("Current Speed: ");
 	while(1){
-		printf("Current Speed: ");
-		printf("%02d",currentSpeed);
-		printf("\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b");
+		printf("Current Speed: %02d    Average Speed: %02d", currentSpeed, averageSpeed);
+		printf("\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b");
 		sleep(1);
 		i++;
-		if(i==15){
-                        printf("\f");
-                        printf("To continue type c and press enter!\n");        
-                        printf("To exit type e and press enter!\n");
-                        char option;
-                        option=getchar();
-                        char newline=getchar();
-                        printf("\f");
-                        if(option=='e'){
-                                break;
-                        }
-                        i=0;
-                }
+		if(i==15)
+		{
+			printf("\f");
+			printf("To continue type c and press enter!\n");        
+			printf("To exit type e and press enter!\n");
+			char option;
+			option=getchar();
+			char newline=getchar();
+			printf("\f");
+			if(option=='e'){
+					break;
+			}
+			i=0;
+		}
 	}
 	pids[0]=create(dashboard,2000,50,"Dashboard",0);
 	pids[3]=create(printSpeed, 2000, 30, "Print Speed", 0);

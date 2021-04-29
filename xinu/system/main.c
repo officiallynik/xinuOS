@@ -85,70 +85,48 @@ void printTime()
 process	main(void)
 {
 	/* Run the Xinu shell */
-		printf("Welcome to our infotainment system!!\n");
-		printf("Enter current fuel value\n");
-		char c = getchar();
-		int num = 0;
-		while (isdigit(c)){
-   			num = (num * 10) + (c - '0');
-   			c = getchar();
-		}
-		currentFuel=num;
-		printf("Current Fuel: %d\n",num);
-		sid32 semWarning=semcreate(1);
 
-		pid32 prClock = create(printTime, 2000, 30, "Clock", 0);
-		pid32 prB = create(getspeed, 2000, 30, "proc Speed", 1 ,semWarning);
-		pid32 prCalendar = create(getCal, 2000, 30, "Calendar", 0);
-		pid32 prPrintSpeed = create(printSpeed, 2000, 30, "Print Speed", 0);
-		pid32 prWarning = create(warning,2000,30,"Warning",1,semWarning);
-		pid32 prFuelGen= create(getFuel,2000,30,"proc Fuel",0);
-		pid32 prPrintFuel = create(printFuel, 2000,30,"Print Fuel",0);
-		//resume(prA);
-		resume(prB);
-		//resume(prC);
-		resume(prFuelGen);
-		resume(prWarning);
+	// Initialize memory buffer pool
+	bufferinit();
 
-		pids[1]=prClock;
-		pids[2]=prCalendar;
-		pids[3]=prPrintSpeed;
-		pids[5]=prWarning;
-		pids[4]=prPrintFuel;
-		pid32 prDash = create(dashboard,2000,50,"Dashboard",0);
-		pids[0]=prDash;
-		//printf("Pids: %d %d %d\n",pids[0],pids[1],pids[2]);
-		resume(prDash);
-		//kill(prA);
-		//kill(prB);
-		//kill(prC);
-
-
-
-
-
-
-
-
-/*
-	recvclr();
-	resume(create(infinite_loop,1024,10,"cs21procA",0));
-	resume(create(infinite_loop,1024,10,"cs21procB",0));
-	resume(create(infinite_loop,1024,10,"cs21procC",0));
-	*/
-	//	resume(create(shell, 8192, 50, "shell", 1, CONSOLE));
-	/* Wait for shell to exit and recreate it */
-/*
-	while (TRUE) {
-		receive();
-		sleepms(200);
-		kprintf("\n\nMain process recreating shell\n\n");
-		resume(create(infinite_loop,1024,10,"cs21procA",0));    
-        	resume(create(infinite_loop,1024,10,"cs21procB",0));
-        	resume(create(infinite_loop,1024,10,"cs21procC",0));
-		resume(create(shell, 4096, 20, "shell", 1, CONSOLE));
+	// Further processes
+	printf("Welcome to our infotainment system!!\n");
+	printf("Enter current fuel value\n");
+	char c = getchar();
+	int num = 0;
+	while (isdigit(c)){
+		num = (num * 10) + (c - '0');
+		c = getchar();
 	}
-*/
+	currentFuel=num;
+	printf("Current Fuel: %d\n",num);
+	sid32 semWarning=semcreate(1);
+
+	pid32 prClock = create(printTime, 2000, 30, "Clock", 0);
+	pid32 prB = create(getspeed, 2000, 30, "proc Speed", 1 ,semWarning);
+	pid32 prCalendar = create(getCal, 2000, 30, "Calendar", 0);
+	pid32 prPrintSpeed = create(printSpeed, 2000, 30, "Print Speed", 0);
+	pid32 prWarning = create(warning,2000,30,"Warning",1,semWarning);
+	pid32 prFuelGen= create(getFuel,2000,30,"proc Fuel",0);
+	pid32 prPrintFuel = create(printFuel, 2000,30,"Print Fuel",0);
+	//resume(prA);
+	resume(prB);
+	//resume(prC);
+	resume(prFuelGen);
+	resume(prWarning);
+
+	pids[1]=prClock;
+	pids[2]=prCalendar;
+	pids[3]=prPrintSpeed;
+	pids[5]=prWarning;
+	pids[4]=prPrintFuel;
+	pid32 prDash = create(dashboard,2000,50,"Dashboard",0);
+	pids[0]=prDash;
+	//printf("Pids: %d %d %d\n",pids[0],pids[1],pids[2]);
+	resume(prDash);
+	//kill(prA);
+	//kill(prB);
+	//kill(prC);
 	return OK;
     
 }
