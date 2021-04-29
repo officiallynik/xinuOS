@@ -3,7 +3,7 @@
 #include <xinu.h>
 
 struct	defer	Defer;
-
+pid32 currprio=0;
 /*------------------------------------------------------------------------
  *  resched  -  Reschedule processor to highest priority eligible process
  *------------------------------------------------------------------------
@@ -21,25 +21,52 @@ void	resched(void)		/* Assumes interrupts are disabled	*/
 	}
 
 	/* Point to process table entry for the current (old) process */
+//	kprintf("************\n");
+	int16 curr=firstid(readylist);
+	int flag=1;
+	while(curr!=queuetail(readylist)){
+		queuetab[curr].qkey+=1;
+//		kprintf("Key: %d Name: %s\n",queuetab[curr].qkey,(&proctab[curr])->prname);
+		if(queuetab[curr].qkey!=currprio){
+			flag=0;
+		}
+		curr=queuetab[curr].qnext;
+	}
+	if(flag==1){
+		int16 curr=firstid(readylist);
+        	while(curr!=queuetail(readylist)){
+                	queuetab[curr].qkey=10;
+                	curr=queuetab[curr].qnext;
+		}
+	}
+
+	
 
 	ptold = &proctab[currpid];
-
+	if(flag==1){
+		//currprio = (currprio > ptold->prprio)?currprio:ptold->prprio;
+	//else
+		currprio=10;
+	}
 	if (ptold->prstate == PR_CURR) {  /* Process remains eligible */
-		if (ptold->prprio > firstkey(readylist)) {
+		if (currprio > firstkey(readylist)) {
 			return;
 		}
 
 		/* Old process will no longer remain current */
 
 		ptold->prstate = PR_READY;
-		insert(currpid, readylist, ptold->prprio);
+		insert(currpid, readylist, currprio);
 	}
 
 	/* Force context switch to highest priority ready process */
-
+	currprio=firstkey(readylist);
 	currpid = dequeue(readylist);
 	ptnew = &proctab[currpid];
 	ptnew->prstate = PR_CURR;
+	/* Printing the name of the new process that was scheduled */
+//	kprintf("%s\n",ptnew->prname);
+
 	preempt = QUANTUM;		/* Reset time slice for process	*/
 	ctxsw(&ptold->prstkptr, &ptnew->prstkptr);
 

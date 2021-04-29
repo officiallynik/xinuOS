@@ -31,6 +31,8 @@
 #include <name.h>
 #include <shell.h>
 #include <date.h>
+#include <fuel.h>
+#include <speed.h>
 #include <prototypes.h>
 #include <delay.h>
 #include <i386.h>
@@ -41,3 +43,6 @@
 #include <multiboot.h>
 #include <stdio.h>
 #include <string.h>
+#include <stddef.h>
+#include <stdlib.h>
+#include <ctype.h>

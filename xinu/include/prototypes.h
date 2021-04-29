@@ -17,6 +17,17 @@ extern	void	arp_hton(struct arppacket *);
 /* in file ascdate.c */
 extern	status	ascdate(uint32, char *);
 
+extern void printCalendar(int year, int month, int date);
+
+
+extern void getspeed(sid32 semWarning);
+
+extern int warningType;
+extern void printSpeed();
+
+extern void warning(sid32 semWarning);
+
+extern void dashboard();
 /* in file bufinit.c */
 extern	status	bufinit(void);
 

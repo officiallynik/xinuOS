@@ -139,6 +139,12 @@ void printCalendar(int year, int month, int date)
     int i;
     for (i = 0; i < 12; i++)
     {
+        // skip other months
+        if (month - 1 != i) 
+        {
+            continue;
+        }
+
         days = numberOfDays(i, year);
 
         // Print the current month name
