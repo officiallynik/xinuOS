@@ -21,6 +21,10 @@ struct	procent	proctab[NPROC];	/* Process table			*/
 struct	sentry	semtab[NSEM];	/* Semaphore table			*/
 struct	memblk	memlist;	/* List of free memory blocks		*/
 
+/* deadlock */
+int rag[NLOCK + NPROC][NLOCK + NPROC];	/* RAG for deadlock detection */
+struct 	lockentry 	locktab[NLOCK];	/* Lock table*/
+
 /* Active system status */
 
 int	prcount;		/* Total number of live processes	*/
@@ -77,6 +81,9 @@ void	nulluser()
 	/* Enable interrupts */
 
 	enable();
+
+	/* deadlock */
+	ready(create((void*) main, INITSTK, INITPRIO, "MAIN1", 2, 0, NULL), 0);
 
 	/* Initialize the network stack and start processes */
 
@@ -145,9 +152,21 @@ local process	startup(void)
  */
 static	void	sysinit()
 {
-	int32	i;
+	int32	i, j, n;
 	struct	procent	*prptr;		/* Ptr to process table entry	*/
 	struct	sentry	*semptr;	/* Ptr to semaphore table entry	*/
+
+	/* deadlock */
+	struct 	lockentry *lptr;	/* ptr to lock table entry */
+
+	/* Initialize RAG to all 0s */
+	for(i = 0; i < n; i++)
+	{
+		for(j = 0; j < n; j++)
+		{
+			rag[i][j] = 0;
+		}	
+	} 
 
 	/* Reset the console */
 
@@ -163,6 +182,9 @@ static	void	sysinit()
 	meminit();
 
 	/* Initialize system variables */
+
+	/* deadlock */
+	resched_count = 0;
 
 	/* Count the Null process as the first process in the system */
 
@@ -200,6 +222,16 @@ static	void	sysinit()
 		semptr->sstate = S_FREE;
 		semptr->scount = 0;
 		semptr->squeue = newqueue();
+	}
+
+	/* deadlock */
+	/* Initialze Lock table */
+	for(i = 0; i < NLOCK; i++)
+	{
+		lptr = &locktab[i];
+		lptr->state = LOCK_FREE;
+		lptr->lock = FALSE;
+		lptr->wait_queue = newlqueue();	
 	}
 
 	/* Initialize buffer pools */

@@ -2,6 +2,16 @@
 
 #include <xinu.h>
 
+/**
+ * Allocate heap storage, returning lowest word address
+ * @param nbytes	size of memory requested
+ * @return pointer to first byte of allocated block
+ */
+void	*malloc(uint32 nbytes)
+{
+	return (void*) getmem(nbytes);
+}
+
 /*------------------------------------------------------------------------
  *  getmem  -  Allocate heap storage, returning lowest word address
  *------------------------------------------------------------------------

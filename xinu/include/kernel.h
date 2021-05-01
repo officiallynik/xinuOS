@@ -71,3 +71,9 @@ extern	qid16	readylist;	/* global ID for list of ready processes*/
 syscall	kprintf(char *fmt, ...);
 syscall	kputc(byte);
 syscall	kgetc(void);
+
+/* deadlock */
+typedef uint32 	mutex_t;	/* mutex block				*/
+typedef int32	lid32;		/* lock ID 				*/
+/* deadlock_count */
+extern int	resched_count;

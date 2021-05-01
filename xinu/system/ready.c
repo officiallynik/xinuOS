@@ -9,7 +9,8 @@ qid16	readylist;			/* Index of ready list		*/
  *------------------------------------------------------------------------
  */
 status	ready(
-	  pid32		pid		/* ID of process to make ready	*/
+	  pid32		pid,		/* ID of process to make ready	*/
+	  bool8		resch 		/* resched or not */
 	)
 {
 	register struct procent *prptr;
@@ -23,7 +24,8 @@ status	ready(
 	prptr = &proctab[pid];
 	prptr->prstate = PR_READY;
 	insert(pid, readylist, prptr->prprio);
-	resched();
-
+	if(resch == 1){
+		resched();
+	}
 	return OK;
 }

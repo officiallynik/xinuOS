@@ -1,5 +1,3 @@
-
-/*  Mir Sameed Ali CS18B021   */
 /*  main.c  - main */
 
 #include <xinu.h>

@@ -2,6 +2,8 @@
 
 #include <xinu.h>
 
+int resched_count;	/* Tracks how many times reschedule is called */
+
 struct	defer	Defer;
 pid32 currprio=0;
 /*------------------------------------------------------------------------
@@ -10,6 +12,25 @@ pid32 currprio=0;
  */
 void	resched(void)		/* Assumes interrupts are disabled	*/
 {
+	//Iterate resched_count
+	resched_count++;
+
+	//run deadlock detection every 50 times reschedule() is called
+	if(resched_count == 50)
+	{		
+		//disable interrupts
+		intmask mask = disable();
+
+		//look for deadlocks
+		deadlock_detect();
+
+		//restore interrupts
+		restore(mask);
+	
+		//reset the count
+		resched_count = 0;
+	}
+
 	struct procent *ptold;	/* Ptr to table entry for old process	*/
 	struct procent *ptnew;	/* Ptr to table entry for new process	*/
 

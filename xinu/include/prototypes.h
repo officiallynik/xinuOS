@@ -137,6 +137,7 @@ extern	pid32	getlast(qid16);
 extern	pid32	getitem(pid32);
 
 /* in file getmem.c */
+extern	void	*malloc(uint32);
 extern	char	*getmem(uint32);
 
 /* in file getpid.c */
@@ -451,7 +452,7 @@ extern	interrupt	sdmcdispatch(void);
 extern	syscall	read(did32, char *, uint32);
 
 /* in file ready.c */
-extern	status	ready(pid32);
+extern	status	ready(pid32, bool8);
 
 /* in file receive.c */
 extern	umsg32	receive(void);
@@ -631,3 +632,23 @@ extern	syscall	yield(void);
 #define	ntohs(x)  ((0xff & ((x)>>8)) | ( (0xff & (x)) << 8))
 #define	ntohl(x)  ((((x)>>24) & 0x000000ff) | (((x)>> 8) & 0x0000ff00) | \
 		   (((x)<<8) & 0x00ff0000) | (((x)<<24) & 0xff000000))
+
+/* deadlock */
+/* in file testandset.S */
+extern uint32	test_and_set(mutex_t *);
+
+/* in file mutex.c */
+extern	void	mutex_lock(mutex_t *);
+extern	void	mutex_unlock(mutex_t *);
+
+/* in file lock.c */
+extern	syscall	lock_create();
+extern	syscall	lock_delete(lid32);
+extern	syscall	acquire(lid32);
+extern	syscall	release(lid32);
+
+/* in file lockqueue.c */
+extern	pid32	lenqueue(pid32, struct lqueue*, int32);
+
+/* in file newlockqueue.c */
+extern	struct lqueue *newlqueue(void);
